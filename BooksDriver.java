@@ -27,7 +27,8 @@ public class BooksDriver
     Scanner keyboard = new Scanner (System.in);
     String q = keyboard.nextLine().toLowerCase();
     //String specify = "&startIndex=0&maxResults=6&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
-    String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(q + "&startIndex=0&maxResults=5", "UTF-8"); //query is added to url
+    String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(q, "UTF-8"); //query is added to url
+    link = link +  "&startIndex=0&maxResults=5";
     //String link = "https://www.googleapis.com/books/v1/volumes?q=harry&potter&startIndex=0&maxResults=5";
     URL url = new URL(link); //url now with query
 
