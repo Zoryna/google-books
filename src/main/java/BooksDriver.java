@@ -19,6 +19,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+
 public class BooksDriver
 {
   public static void main(String args[]) throws IOException {
@@ -26,10 +30,8 @@ public class BooksDriver
     System.out.println("Type in a book that you want to search:");
     Scanner keyboard = new Scanner (System.in);
     String q = keyboard.nextLine().toLowerCase();
-    //String specify = "&startIndex=0&maxResults=6&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
     String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(q, "UTF-8"); //query is added to url
     link = link +  "&startIndex=0&maxResults=5";
-    //String link = "https://www.googleapis.com/books/v1/volumes?q=harry&potter&startIndex=0&maxResults=5";
     URL url = new URL(link); //url now with query
 
     //System.out.println("testing: " + link); //testing
