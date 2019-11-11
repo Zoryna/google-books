@@ -21,7 +21,7 @@ import org.json.simple.parser.ParseException;
 
 public class BooksDriver
 {
-  public static void main(String args[]) throws ParseException
+  public static void main(String args[]) throws IOException, ParseException
   {
     //setting up the link/query
     System.out.println("Type in a book title that you want to search:");
@@ -59,7 +59,7 @@ public class BooksDriver
       System.out.println("Info under volumeInfo" + jObj.get("authors"));
       System.out.println("Info under volumeInfo" + jObj.get("publisher"));
 
-      for (int j = 0; j < specificArr.size(); j++)
+      for (int j = 0; j < specificArr.size(); j++) //NullPointerException
       {
         JSONObject specificJObj = (JSONObject)specificArr.get(j);
         String author = (String)specificJObj.get("author");
