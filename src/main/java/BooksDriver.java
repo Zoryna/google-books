@@ -8,7 +8,6 @@ Coded by Janeen Soria
 - View a "Reading List" with all the books the user has selected from their queries -- this is a local reading list and not tied to Google Books's account features
 */
 
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,59 +22,54 @@ public class BooksDriver
 {
   public static void main(String args[]) throws IOException, ParseException
   {
-    //setting up the link/query
     System.out.println("Type in a book title that you want to search:");
     Scanner keyboard = new Scanner(System.in);
     String q = keyboard.nextLine().toLowerCase();
     String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(q, "UTF-8"); //query is added to url
     link = link +  "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
-    URL url = new URL(link); //url now with query
+    URL url = new URL(link);
 
     //setting up connection/request
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestMethod("GET");
 
-    //System.out.println("testing: " + link); //testing
+    //System.out.println("Testing link: " + link);
     //System.out.println("Testing con: " + con);
 
     String inline = ""; //gets the JSON data and makes it a String
     Scanner sc = new Scanner(url.openStream()); //reads JSON data
-    while (sc.hasNext()) //while there is more data next
+    while (sc.hasNext())
     {
-      inline += sc.nextLine(); //keep adding the data
+      inline += sc.nextLine();
     }
-    System.out.println(inline); //prints out all the data
+    //System.out.println("Testing data: " + inline);
     sc.close();
 
+
     JSONParser parse = new JSONParser();
-    JSONObject jObj = (JSONObject)parse.parse(inline); //to store String data as JSON objects
-    JSONArray theJArray = (JSONArray)jObj.get("items"); //a JSON Array to hold/store them
-    for (int i = 0; i < theJArray.size(); i++) //
+    JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
+    JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
+
+    System.out.println("Testing theJArray: " + theJArray);
+
+    for (int i = 0; i < theJArray.size(); i++) //goes through array of JSON objects made from "items"
     {
-      JSONObject theJObj = (JSONObject)theJArray.get(i); //get the JSON objects from the JSON array
-      //get specific results from the data under the "kind" component
-      JSONArray specificArr = (JSONArray)jObj.get("volumeInfo"); //a section in "items"
-      System.out.println("Info under volumeInfo" + jObj.get("title"));
-      System.out.println("Info under volumeInfo" + jObj.get("authors"));
-      System.out.println("Info under volumeInfo" + jObj.get("publisher"));
+      JSONObject secondJObj = (JSONObject)theJArray.get(i);
+      System.out.println("The secondJobj: " + secondJObj); //one object is one book and its info
 
-      for (int j = 0; j < specificArr.size(); j++) //NullPointerException
+      JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo contains title, author, and publisher
+      JSONArray specificArr = (JSONArray)volInfo.get("authors");
+
+      System.out.println("The specificArr is: " + specificArr); //TODO have it display all the authors of each book
+      System.out.println("Testing title section: " + secondJObj.get("title")); //TODO make it not return null
+      System.out.println("The specific section: " + secondJObj.get("authors")); //TODO make it not return null
+
+      /*for (int j = 0; j < specificArr.size(); j++)
       {
-        JSONObject specificJObj = (JSONObject)specificArr.get(j);
-        String author = (String)specificJObj.get("author");
-        System.out.println(author);
-        String title = (String)specificJObj.get("title");
-        System.out.println(title);
-        String publisher = (String)specificJObj.get("publisher");
-        System.out.println(publisher);
 
-
-
-
-
-
-      }
+      } */
     }
+
 
   }
 }
