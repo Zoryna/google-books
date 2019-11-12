@@ -33,42 +33,39 @@ public class BooksDriver
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestMethod("GET");
 
-    //System.out.println("Testing link: " + link);
-    //System.out.println("Testing con: " + con);
-
     String inline = ""; //gets the JSON data and makes it a String
     Scanner sc = new Scanner(url.openStream()); //reads JSON data
     while (sc.hasNext())
     {
       inline += sc.nextLine();
     }
-    //System.out.println("Testing data: " + inline);
     sc.close();
-
 
     JSONParser parse = new JSONParser();
     JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
     JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
 
-    System.out.println("Testing theJArray: " + theJArray);
-
-    for (int i = 0; i < theJArray.size(); i++) //goes through array of JSON objects made from "items"
+    System.out.println("Here are 5 books matching your search:");
+    System.out.println("");
+    for (int i = 0; i < theJArray.size(); i++)
     {
       JSONObject secondJObj = (JSONObject)theJArray.get(i);
-      System.out.println("The secondJobj: " + secondJObj); //one object is one book and its info
-
       JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo contains title, author, and publisher
-      JSONArray specificArr = (JSONArray)volInfo.get("authors");
+      JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors section is an array in "items"
 
-      System.out.println("The specificArr is: " + specificArr); //TODO have it display all the authors of each book
-      System.out.println("Testing title section: " + secondJObj.get("title")); //TODO make it not return null
-      System.out.println("The specific section: " + secondJObj.get("authors")); //TODO make it not return null
-
-      /*for (int j = 0; j < specificArr.size(); j++)
-      {
-
-      } */
+      System.out.println("Title: " + volInfo.get("title"));
+      System.out.println("Author: " + authorArr);
+      System.out.println("Publisher: " + volInfo.get("publisher"));
+      System.out.println("----------------------------------------------");
     }
+
+
+
+
+
+
+
+
 
 
   }
