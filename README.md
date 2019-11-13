@@ -25,15 +25,18 @@ Apache Maven
 Java and json-simple-1.1.1.jar must be installed on your device.
 
 json-simple-1.1.1.jar download:
+
 https://code.google.com/archive/p/json-simple/downloads
 
 Instructions on how to set up JSON-simple on your device:
 https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm
 
 If you are using IntelliJ and Maven:
+
 https://www.jetbrains.com/help/idea/work-with-maven-dependencies.html
 
 Other instructions on setting up the dependency:
+
 https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple/1.1.1
 
 To run the program, if you are using an IDE you can select the BooksDriver.java file and press the green arrow icon

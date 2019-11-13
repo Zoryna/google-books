@@ -8,7 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class BooksDriver
+public class BooksDriver //TODO how to compile and run through terminal commands, only able to run through run icon
 {
   public static void main(String args[]) throws IOException, ParseException
   {
@@ -46,7 +46,7 @@ public class BooksDriver
       JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
       System.out.println("Title: " + volInfo.get("title"));
-      titlesList.add(volInfo.get("title"));
+      titlesList.add(volInfo.get("title")); //TODO fix unchecked call
       System.out.println("Author: " + authorArr);
       System.out.println("Publisher: " + volInfo.get("publisher"));
       System.out.println("----------------------------------------------");
