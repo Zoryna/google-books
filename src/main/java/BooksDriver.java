@@ -49,11 +49,11 @@ public class BooksDriver
     System.out.println("");
 
     JSONArray listTitles = new JSONArray();
-    for (int i = 0; i < theJArray.size(); i++) //
+    for (int i = 0; i < theJArray.size(); i++)
     {
       JSONObject secondJObj = (JSONObject)theJArray.get(i);
-      JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo contains title, author, and publisher
-      JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors section is an array in "items"
+      JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+      JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
       System.out.println("Title: " + volInfo.get("title"));
       listTitles.add(volInfo.get("title"));
@@ -62,24 +62,28 @@ public class BooksDriver
       System.out.println("Publisher: " + volInfo.get("publisher"));
       System.out.println("----------------------------------------------");
     }
-    System.out.println("Test titles list: " + listTitles);
-    //testing
-    System.out.println(listTitles.get(0));
-    System.out.println(listTitles.get(1));
-    System.out.println(listTitles.get(2));
-    System.out.println(listTitles.get(3));
-    System.out.println(listTitles.get(4));
+
+    System.out.println("Do you want to save some of these books to your reading list? Type 'Y' or 'N");
+    String response = keyboard.nextLine().toLowerCase();
+
+    JSONArray readingList = new JSONArray();
+    if (response.equals("y"))
+    {
+      System.out.println("Which book(s) do you want to save to your reading list?");
+
+      for (int i = 0; i < listTitles.size(); i++)
+      {
+        System.out.println(i + ". " + listTitles.get(i));
+        //have user type index of books to add to readingList
 
 
 
-    /*
-    ideas adding book to local reading list:
-    create an JSON array where it stores the titles of the books
-    key is number of the book, value is the title
-    if the user wants to add that book to their reading list (another JSON array)
-    type in the number and that title will be added in the other JSON array
-     */
+      }
+    }
+    else
+      System.out.println("Happy reading!");
 
 
+    System.out.println("Here is your reading list: " + readingList);
   }
 }
