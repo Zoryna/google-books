@@ -1,11 +1,3 @@
-/*
-- Type in a query and display a list of 5 books matching that query
-- Each item in the list should include the book's author, title, and publishing company
-
-- A user should be able to select a book from the five displayed to save to a "Reading List" (use a Map or Arraylist)
-- View a "Reading List" with all the books the user has selected from their queries -- this is a local reading list and not tied to Google Books's account features
-*/
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -63,7 +55,7 @@ public class BooksDriver
     System.out.println("Do you want to save some of these books to your reading list? Type 'Y' or 'N");
     String response = keyboard.nextLine().toLowerCase();
 
-    if (response.equals("y"))
+    if (response.equals("y")) //TODO allow users to make more queries and put more books in their reading list
     {
       System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
       for (int i = 0; i < titlesList.size(); i++)
