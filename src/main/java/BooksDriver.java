@@ -1,6 +1,4 @@
 /*
-Coded by Janeen Soria
-
 - Type in a query and display a list of 5 books matching that query
 - Each item in the list should include the book's author, title, and publishing company
 
@@ -48,7 +46,7 @@ public class BooksDriver
     System.out.println("Here are 5 books matching your search:");
     System.out.println("");
 
-    JSONArray listTitles = new JSONArray();
+    JSONArray titlesList = new JSONArray();
     for (int i = 0; i < theJArray.size(); i++)
     {
       JSONObject secondJObj = (JSONObject)theJArray.get(i);
@@ -56,8 +54,7 @@ public class BooksDriver
       JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
       System.out.println("Title: " + volInfo.get("title"));
-      listTitles.add(volInfo.get("title"));
-
+      titlesList.add(volInfo.get("title"));
       System.out.println("Author: " + authorArr);
       System.out.println("Publisher: " + volInfo.get("publisher"));
       System.out.println("----------------------------------------------");
@@ -66,24 +63,18 @@ public class BooksDriver
     System.out.println("Do you want to save some of these books to your reading list? Type 'Y' or 'N");
     String response = keyboard.nextLine().toLowerCase();
 
-    JSONArray readingList = new JSONArray();
     if (response.equals("y"))
     {
-      System.out.println("Which book(s) do you want to save to your reading list?");
-
-      for (int i = 0; i < listTitles.size(); i++)
-      {
-        System.out.println(i + ". " + listTitles.get(i));
-        //have user type index of books to add to readingList
-
-
-
-      }
+      System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
+      for (int i = 0; i < titlesList.size(); i++)
+        System.out.println(i + ". " + titlesList.get(i));
     }
     else
       System.out.println("Happy reading!");
 
-
+    JSONArray readingList = new JSONArray();
+    int bookChoice = keyboard.nextInt();
+    readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
     System.out.println("Here is your reading list: " + readingList);
   }
 }
