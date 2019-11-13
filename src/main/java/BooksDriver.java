@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
+import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,23 +48,29 @@ public class BooksDriver
 
     System.out.println("Here are 5 books matching your search:");
     System.out.println("");
-    for (int i = 0; i < theJArray.size(); i++)
+
+    for (int i = 0; i < theJArray.size(); i++) //
     {
       JSONObject secondJObj = (JSONObject)theJArray.get(i);
       JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo contains title, author, and publisher
       JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors section is an array in "items"
 
       System.out.println("Title: " + volInfo.get("title"));
+
       System.out.println("Author: " + authorArr);
       System.out.println("Publisher: " + volInfo.get("publisher"));
       System.out.println("----------------------------------------------");
     }
 
+    /*
+    ideas adding book to local reading list:
+    create an JSON array where it stores the titles of the books
+    key is number of the book, value is the title
+    if the user wants to add that book to their reading list (another JSON array)
+    type in the number and that title will be added in the other JSON array
 
 
-
-
-
+     */
 
 
 
