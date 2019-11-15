@@ -10,57 +10,44 @@ import org.json.simple.parser.ParseException;
 
 public class Books
 {
-    Scanner keyboard = new Scanner(System.in);
-    String query;
-    String inline;
-
-    //adding a query to the link/also allows for multiple queries
-    public String addQuery (String query) throws UnsupportedEncodingException, MalformedURLException
+    public void displayResults(JSONArray theJArray)
     {
-        query = this.query;
-        String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(query, "UTF-8"); //query is added to url
-        link = link +  "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
-        return link;
-    }
+        System.out.println("Here are 5 books matching your search:");
+        System.out.println("");
 
-    public void displayResults(String inline)
-    {
-        try
+        for (int i = 0; i < theJArray.size(); i++)
         {
-            inline = this.inline;
-            JSONParser parse = new JSONParser();
-            JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
-            JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
+            JSONObject secondJObj = (JSONObject)theJArray.get(i);
+            JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
-            System.out.println("Here are 5 books matching your search:");
-            System.out.println("");
-
-            //JSONArray titlesList = new JSONArray();
-            for (int i = 0; i < theJArray.size(); i++)
-            {
-                JSONObject secondJObj = (JSONObject)theJArray.get(i);
-                JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
-                JSONArray authorArr = (JSONArray)volInfo.get("authors");
-
-                System.out.println("Title: " + volInfo.get("title"));
-                //titlesList.add(volInfo.get("title")); //TODO fix unchecked call
-                System.out.println("Author: " + authorArr);
+            System.out.println("Title: " + volInfo.get("title"));
+            //titlesList.add(volInfo.get("title"));
+            System.out.println("Author: " + authorArr);
                 System.out.println("Publisher: " + volInfo.get("publisher"));
                 System.out.println("----------------------------------------------");
-            }
-        }
-        catch (ParseException e)
-        {
-            System.out.println("Parse exception");
         }
     }
 
-    //adding books to the reading list and displays it
-    public void addToReading(JSONArray titlesList)
+    public JSONArray returnTitles(JSONArray theJArray)
     {
+        JSONArray titlesList = new JSONArray();
+        for (int i = 0; i < theJArray.size(); i++)
+        {
+            JSONObject secondJObj = (JSONObject)theJArray.get(i);
+            JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            titlesList.add(volInfo.get("title"));
+        }
+
+        return titlesList;
+    }
+
+    public void addToReading(JSONArray titlesList) //adding books to the reading list and displays it
+    {
+        Scanner keyboard = new Scanner(System.in);
         String response = keyboard.nextLine().toLowerCase();
 
-        if (response.equals("y")) //TODO allow users to make more queries and put more books in their reading list
+        if (response.equals("y"))
         {
             System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
             for (int i = 0; i < titlesList.size(); i++)
