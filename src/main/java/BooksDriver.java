@@ -12,12 +12,12 @@ public class BooksDriver //TODO how to compile and run through terminal commands
 {
   public static void main(String args[]) throws IOException, ParseException
   {
-    System.out.println("Type in a book title that you want to search:");
     Scanner keyboard = new Scanner(System.in);
+    Books aBook = new Books();
+
+    System.out.println("Type in a book title that you want to search:");
     String q = keyboard.nextLine().toLowerCase();
-    String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(q, "UTF-8"); //query is added to url
-    link = link +  "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
-    URL url = new URL(link);
+    URL url = new URL(aBook.addQuery(q));
 
     //setting up connection/request
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -31,42 +31,10 @@ public class BooksDriver //TODO how to compile and run through terminal commands
     }
     sc.close();
 
-    JSONParser parse = new JSONParser();
-    JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
-    JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
-
-    System.out.println("Here are 5 books matching your search:");
-    System.out.println("");
-
-    JSONArray titlesList = new JSONArray();
-    for (int i = 0; i < theJArray.size(); i++)
-    {
-      JSONObject secondJObj = (JSONObject)theJArray.get(i);
-      JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
-      JSONArray authorArr = (JSONArray)volInfo.get("authors");
-
-      System.out.println("Title: " + volInfo.get("title"));
-      titlesList.add(volInfo.get("title")); //TODO fix unchecked call
-      System.out.println("Author: " + authorArr);
-      System.out.println("Publisher: " + volInfo.get("publisher"));
-      System.out.println("----------------------------------------------");
-    }
+    aBook.displayResults(inline);
 
     System.out.println("Do you want to save some of these books to your reading list? Type 'Y' or 'N");
-    String response = keyboard.nextLine().toLowerCase();
+    //aBook.addToReading(titlesList);
 
-    if (response.equals("y")) //TODO allow users to make more queries and put more books in their reading list
-    {
-      System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
-      for (int i = 0; i < titlesList.size(); i++)
-        System.out.println(i + ". " + titlesList.get(i));
-    }
-    else
-      System.out.println("Happy reading!");
-
-    JSONArray readingList = new JSONArray();
-    int bookChoice = keyboard.nextInt();
-    readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
-    System.out.println("Here is your reading list: " + readingList);
   }
 }
