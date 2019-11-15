@@ -1,3 +1,5 @@
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
@@ -10,23 +12,15 @@ public class Books
 {
     Scanner keyboard = new Scanner(System.in);
     String query;
-    String link;
     String inline;
 
     //adding a query to the link/also allows for multiple queries
-    public String addQuery (String query)
+    public String addQuery (String query) throws UnsupportedEncodingException, MalformedURLException
     {
-        try
-        {
-            query = this.query;
-            link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(query, "UTF-8"); //query is added to url
-            link = link +  "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            System.out.println("Exception on URLEncoder");
-        }
-        return link; //TODO needs to be instantiated
+        query = this.query;
+        String link = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(query, "UTF-8"); //query is added to url
+        link = link +  "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
+        return link;
     }
 
     public void displayResults(String inline)
@@ -55,9 +49,9 @@ public class Books
                 System.out.println("----------------------------------------------");
             }
         }
-        catch (ParseException e) //TODO incorporate exception
+        catch (ParseException e)
         {
-            throw e;
+            System.out.println("Parse exception");
         }
     }
 
