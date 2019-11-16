@@ -5,11 +5,25 @@ import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Books
 {
+    Scanner keyboard = new Scanner(System.in);
+    String q;
+
+    //query is added to url
+    public String addQuery(String q) throws UnsupportedEncodingException
+    {
+        q = this.q;
+        String link = "https://www.googleapis.com/books/v1/volumes?q=";
+
+        q = keyboard.nextLine().toLowerCase();
+        link = link + URLEncoder.encode(q, "UTF-8") + "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I";
+
+        return link;
+    }
+
+
     public void displayResults(JSONArray theJArray)
     {
         System.out.println("Here are 5 books matching your search:");
@@ -22,16 +36,16 @@ public class Books
             JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
             System.out.println("Title: " + volInfo.get("title"));
-            //titlesList.add(volInfo.get("title"));
             System.out.println("Author: " + authorArr);
-                System.out.println("Publisher: " + volInfo.get("publisher"));
-                System.out.println("----------------------------------------------");
+            System.out.println("Publisher: " + volInfo.get("publisher"));
+            System.out.println("----------------------------------------------");
         }
     }
 
     public JSONArray returnTitles(JSONArray theJArray)
     {
         JSONArray titlesList = new JSONArray();
+
         for (int i = 0; i < theJArray.size(); i++)
         {
             JSONObject secondJObj = (JSONObject)theJArray.get(i);
@@ -42,9 +56,9 @@ public class Books
         return titlesList;
     }
 
-    public void addToReading(JSONArray titlesList) //adding books to the reading list and displays it
+    //adding books to the reading list and displays it
+    public void addToReading(JSONArray titlesList)
     {
-        Scanner keyboard = new Scanner(System.in);
         String response = keyboard.nextLine().toLowerCase();
 
         if (response.equals("y"))

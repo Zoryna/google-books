@@ -13,13 +13,11 @@ public class BooksDriver //TODO how to compile and run through terminal commands
   public static void main(String args[]) throws IOException, ParseException
   {
     Scanner keyboard = new Scanner(System.in);
-    String link = "https://www.googleapis.com/books/v1/volumes?q=";
     Books aBook = new Books();
 
     System.out.println("Type in a book title that you want to search:");
     String q = keyboard.nextLine().toLowerCase();
-    link = link + URLEncoder.encode(q, "UTF-8") + "&startIndex=0&maxResults=5&key=AIzaSyAI5Pn4IbnRRrHolRJ2SKGO2eHByl7Ua4I"; //query is added to url
-    URL url = new URL(link);
+    URL url = new URL(aBook.addQuery(q));
 
     //setting up connection/request
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -35,7 +33,7 @@ public class BooksDriver //TODO how to compile and run through terminal commands
 
     JSONParser parse = new JSONParser();
     JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
-    JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
+    JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array (main array)
     aBook.displayResults(theJArray);
 
     System.out.println("Do you want to save some of these books to your reading list? Type 'Y' or 'N");
