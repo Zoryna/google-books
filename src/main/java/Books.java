@@ -64,7 +64,7 @@ public class Books
         return titlesList;
     }
 
-    //adding books to the reading list and displays it
+    //adding books to the reading list and displays what was added
     public JSONArray addToReading(JSONArray titlesList, String response)
     {
         JSONArray readingList = new JSONArray();
@@ -87,13 +87,12 @@ public class Books
         return readingList;
     }
 
-    public void displayReadingList(JSONArray readingList) //TODO
+    public void displayReadingList(JSONArray readingList)
     {
         System.out.println("Here is your reading list:");
         for (int i = 0; i < readingList.size(); i++)
         {
            System.out.println(readingList.get(i));
-
         }
     }
 }

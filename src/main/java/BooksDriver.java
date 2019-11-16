@@ -35,7 +35,7 @@ public class BooksDriver
 
       JSONParser parse = new JSONParser();
       JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
-      JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array (main array)
+      JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
       aBook.displayResults(theJArray);
 
       System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N");
