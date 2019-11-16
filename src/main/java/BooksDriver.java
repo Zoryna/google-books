@@ -15,9 +15,8 @@ public class BooksDriver //TODO how to compile and run through terminal commands
     Scanner keyboard = new Scanner(System.in);
     Books aBook = new Books();
 
-    System.out.println("Type in a book title that you want to search:");
-    String q = keyboard.nextLine().toLowerCase();
-    URL url = new URL(aBook.addQuery(q));
+    //System.out.println("Type in a book title that you want to search:");
+    URL url = new URL(aBook.addQuery());
 
     //setting up connection/request
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
