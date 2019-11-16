@@ -1,7 +1,8 @@
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,17 +10,26 @@ import org.json.simple.JSONObject;
 public class Books
 {
     Scanner keyboard = new Scanner(System.in);
+    URL url;
 
     //query is added to url
-    public String addQuery() throws UnsupportedEncodingException
+    public String addQuery(String q) throws UnsupportedEncodingException
     {
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
-
-        System.out.println("Type in a book title that you want to search:");
-        String q = keyboard.nextLine().toLowerCase();
         link = link + URLEncoder.encode(q, "UTF-8") + "&startIndex=0&maxResults=5";
 
+        System.out.println("Searching..."); //for users to be aware of the status of their search
+
         return link;
+    }
+
+    public void makeConnection (URL url) throws IOException
+    {
+        this.url = url;
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
 
     public void displayResults(JSONArray theJArray)
@@ -55,10 +65,9 @@ public class Books
     }
 
     //adding books to the reading list and displays it
-    public void addToReading(JSONArray titlesList)
+    public JSONArray addToReading(JSONArray titlesList, String response)
     {
         JSONArray readingList = new JSONArray();
-        String response = keyboard.nextLine().toLowerCase();
 
         if (response.equals("y"))
         {
@@ -66,13 +75,25 @@ public class Books
             for (int i = 0; i < titlesList.size(); i++)
                 System.out.println(i + ". " + titlesList.get(i));
 
-            int bookChoice = keyboard.nextInt(); //TODO fix input
+            int bookChoice = keyboard.nextInt();
             readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
-            System.out.println("Here is your reading list: " + readingList);
+            System.out.println("This is added to your reading list: " + readingList);
         }
         else
         {
             System.out.println("Happy reading!");
+        }
+
+        return readingList;
+    }
+
+    public void displayReadingList(JSONArray readingList) //TODO
+    {
+        System.out.println("Here is your reading list:");
+        for (int i = 0; i < readingList.size(); i++)
+        {
+           System.out.println(readingList.get(i));
+
         }
     }
 }

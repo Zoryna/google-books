@@ -36,7 +36,7 @@ https://www.jetbrains.com/help/idea/work-with-maven-dependencies.html
 Other instructions on setting up the dependency:
 https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple/1.1.1
 
-To run the program, if you are using an IDE you can select the BooksDriver.java file and press the green arrow icon
+To run the program, use an IDE and select the BooksDriver.java file and press the green arrow icon
 to run the file.
 
 ## Authors
