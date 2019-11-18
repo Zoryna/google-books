@@ -73,15 +73,31 @@ public class Books
         {
             System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
             for (int i = 0; i < titlesList.size(); i++)
+            {
                 System.out.println(i + ". " + titlesList.get(i));
+            }
 
             int bookChoice = keyboard.nextInt();
-            readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
-            System.out.println("This is added to your reading list: " + readingList);
+            if ((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4))
+            {
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
+                System.out.println("This is added to your reading list: " + readingList);
+            }
+            else
+            {
+                while (!((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4)))
+                {
+                    System.out.println("Please type 0, 1, 2, 3, or 4");
+                    bookChoice = keyboard.nextInt();
+                }
+
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
+                System.out.println("This is added to your reading list: " + readingList);
+            }
         }
         else
         {
-            System.out.println("Happy reading!");
+            System.out.println("Happy browsing!");
         }
 
         return readingList;

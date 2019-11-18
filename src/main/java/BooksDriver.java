@@ -40,7 +40,15 @@ public class BooksDriver
 
       System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
       response = keyboard.nextLine().toLowerCase();
-      readingList.add(aBook.addToReading(aBook.returnTitles(theJArray), response));
+      if (response.equals("y"))
+      {
+        readingList.add(aBook.addToReading(aBook.returnTitles(theJArray), response));
+      }
+      else
+      {
+        System.out.println("See you next time!");
+      }
+
 
       System.out.println("Do you want to search for another book? Type 'Y' or 'N'");
       searching = keyboard.nextLine().toLowerCase();
