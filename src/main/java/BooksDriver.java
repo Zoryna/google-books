@@ -8,41 +8,41 @@ import org.json.simple.parser.ParseException;
 
 public class BooksDriver
 {
-  public static void main(String args[]) throws IOException, ParseException
+  public static void main(String args[]) throws IOException
   {
     Scanner keyboard = new Scanner(System.in);
-    Scanner sc;
-    String searching;
+    Scanner readData;
+    String keepSearching;
     URL url;
-    String q, response;
+    String query, response;
     JSONArray readingList = new JSONArray();
     Books aBook = new Books();
 
     do
     {
       System.out.println("Type in a book title that you want to search:");
-      q = keyboard.nextLine().toLowerCase();
-      url = new URL(aBook.addQuery(q));
-      aBook.makeConnection(url);
+      query = keyboard.nextLine().toLowerCase();
+      url = new URL(aBook.addQuery(query));
+      aBook.makeURLConnection(url);
 
-      String inline = ""; //gets the JSON data and makes it a String
-      sc = new Scanner(url.openStream()); //reads JSON data
-      while (sc.hasNext())
+      /*String inline = ""; //gets the JSON data and makes it a String //TODO separate this
+      readData = new Scanner(url.openStream()); //reads JSON data
+      while (readData.hasNext())
       {
-        inline += sc.nextLine();
+        inline += readData.nextLine();
       }
-      sc.close();
+      readData.close(); */
 
-      JSONParser parse = new JSONParser();
+      /*JSONParser parse = new JSONParser(); //TODO separate this
       JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
       JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
-      aBook.displayResults(theJArray);
+      aBook.displaySearchResults(theJArray); */
 
       System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
       response = keyboard.nextLine().toLowerCase();
       if (response.equals("y"))
       {
-        readingList.add(aBook.addToReading(aBook.returnTitles(theJArray), response));
+        readingList.add(aBook.addToReadingList(aBook.returnOnlyTitles(theJArray), response));
       }
       else
       {
@@ -51,9 +51,9 @@ public class BooksDriver
 
 
       System.out.println("Do you want to search for another book? Type 'Y' or 'N'");
-      searching = keyboard.nextLine().toLowerCase();
+      keepSearching = keyboard.nextLine().toLowerCase(); //determines if stay in loop
     }
-    while (searching.equals("y"));
+    while (keepSearching.equals("y"));
 
 
     aBook.displayReadingList(readingList);

@@ -6,41 +6,94 @@ import java.io.IOException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Books
 {
     Scanner keyboard = new Scanner(System.in);
+    Scanner readData;
     URL url;
+    String inline;
+
+    public String receiveData (URL url) throws IOException
+    {
+        this.url = url;
+        String inline = ""; //gets the JSON data and makes it a String
+
+        readData = new Scanner(url.openStream()); //reads JSON data
+        while (readData.hasNext())
+        {
+            inline += readData.nextLine();
+        }
+        readData.close();
+
+        return inline;
+    }
+
+    public JSONArray parseData(String inline) throws ParseException
+    {
+        this.inline = inline;
+
+        JSONParser parse = new JSONParser(); //TODO separate this
+        JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
+        JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
+
+
+    }
+
 
     //query is added to url
-    public String addQuery(String q) throws UnsupportedEncodingException
+    public String addQuery(String query) throws UnsupportedEncodingException //TODO create try and catch?
     {
+
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
-        link = link + URLEncoder.encode(q, "UTF-8") + "&startIndex=0&maxResults=5";
+        link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
         System.out.println("Searching..."); //for users to be aware of the status of their search
 
         return link;
     }
 
-    public void makeConnection (URL url) throws IOException
+    public URL returnURL()
     {
-        this.url = url;
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+
+
+
+
+
+
+
+
+    }
+
+    public void makeURLConnection (URL url) //throws IOException //TODO create try and catch?
+    {
+        try
+        {
+            this.url = url;
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+        }
+        catch (IOException ioException)
+        {
+            System.out.println("Invalid query was entered");
+        }
+
 
         System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
 
-    public void displayResults(JSONArray theJArray)
+    public void displaySearchResults(JSONArray theJArray)
     {
         System.out.println("Here are 5 books matching your search:");
         System.out.println("");
 
         for (int i = 0; i < theJArray.size(); i++)
         {
-            JSONObject secondJObj = (JSONObject)theJArray.get(i);
-            JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            JSONObject specificJObj = (JSONObject)theJArray.get(i);
+            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
             JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
             System.out.println("Title: " + volInfo.get("title"));
@@ -50,14 +103,14 @@ public class Books
         }
     }
 
-    public JSONArray returnTitles(JSONArray theJArray)
+    public JSONArray returnOnlyTitles(JSONArray theJArray)
     {
         JSONArray titlesList = new JSONArray();
 
         for (int i = 0; i < theJArray.size(); i++)
         {
-            JSONObject secondJObj = (JSONObject)theJArray.get(i);
-            JSONObject volInfo = (JSONObject)secondJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            JSONObject specificJObj = (JSONObject)theJArray.get(i);
+            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
             titlesList.add(volInfo.get("title"));
         }
 
@@ -65,7 +118,7 @@ public class Books
     }
 
     //adding books to the reading list and displays what was added
-    public JSONArray addToReading(JSONArray titlesList, String response)
+    public JSONArray addToReadingList(JSONArray titlesList, String response)
     {
         JSONArray readingList = new JSONArray();
 
@@ -83,6 +136,7 @@ public class Books
                 readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
                 System.out.println("This is added to your reading list: " + readingList);
             }
+
             else
             {
                 while (!((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4)))
