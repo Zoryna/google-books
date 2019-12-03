@@ -6,48 +6,16 @@ import java.io.IOException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class Books
 {
-    Scanner keyboard = new Scanner(System.in);
-    Scanner readData;
     URL url;
-    String inline;
-
-    public String receiveData (URL url) throws IOException
-    {
-        this.url = url;
-        String inline = ""; //gets the JSON data and makes it a String
-
-        readData = new Scanner(url.openStream()); //reads JSON data
-        while (readData.hasNext())
-        {
-            inline += readData.nextLine();
-        }
-        readData.close();
-
-        return inline;
-    }
-
-    public JSONArray parseData(String inline) throws ParseException
-    {
-        this.inline = inline;
-
-        JSONParser parse = new JSONParser(); //TODO separate this
-        JSONObject jObj = (JSONObject)parse.parse(inline); //parse the information from the API
-        JSONArray theJArray = (JSONArray)jObj.get("items"); //array stores data from "items" array
-
-
-    }
-
 
     //query is added to url
-    public String addQuery(String query) throws UnsupportedEncodingException //TODO create try and catch?
+    public String addQuery(String query) throws UnsupportedEncodingException //TODO check if valid query
     {
-
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
         link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
@@ -56,19 +24,7 @@ public class Books
         return link;
     }
 
-    public URL returnURL()
-    {
-
-
-
-
-
-
-
-
-    }
-
-    public void makeURLConnection (URL url) //throws IOException //TODO create try and catch?
+    public void makeURLConnection (URL url) //throws IOException
     {
         try
         {
@@ -85,16 +41,36 @@ public class Books
         System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
 
-    public void displaySearchResults(JSONArray theJArray)
+
+    public JSONArray parseData(URL url) throws IOException, ParseException
+    {
+        this.url = url;
+        Scanner readData;
+        String inline = ""; //gets the JSON data and makes it a String
+
+        readData = new Scanner(url.openStream()); //reads JSON data
+        while (readData.hasNext()) {
+            inline += readData.nextLine();
+        }
+        readData.close();
+
+        JSONParser parse = new JSONParser();
+        JSONObject jObj = (JSONObject) parse.parse(inline); //parse the information from the API
+        JSONArray storedAPIData = (JSONArray) jObj.get("items"); //array stores data from "items" array
+
+        return storedAPIData;
+    }
+
+    public void displaySearchResults(JSONArray dataFromAPI)
     {
         System.out.println("Here are 5 books matching your search:");
         System.out.println("");
 
-        for (int i = 0; i < theJArray.size(); i++)
+        for (int i = 0; i < dataFromAPI.size(); i++)
         {
-            JSONObject specificJObj = (JSONObject)theJArray.get(i);
+            JSONObject specificJObj = (JSONObject)dataFromAPI.get(i);
             JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
-            JSONArray authorArr = (JSONArray)volInfo.get("authors");
+            JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors has its own array inside volumeInfo
 
             System.out.println("Title: " + volInfo.get("title"));
             System.out.println("Author: " + authorArr);
@@ -103,14 +79,14 @@ public class Books
         }
     }
 
-    public JSONArray returnOnlyTitles(JSONArray theJArray)
+    public JSONArray returnOnlyTitles(JSONArray dataFromAPI)
     {
         JSONArray titlesList = new JSONArray();
 
-        for (int i = 0; i < theJArray.size(); i++)
+        for (int i = 0; i < dataFromAPI.size(); i++)
         {
-            JSONObject specificJObj = (JSONObject)theJArray.get(i);
-            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            JSONObject specificJObj = (JSONObject)dataFromAPI.get(i);
+            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title
             titlesList.add(volInfo.get("title"));
         }
 
@@ -120,6 +96,7 @@ public class Books
     //adding books to the reading list and displays what was added
     public JSONArray addToReadingList(JSONArray titlesList, String response)
     {
+        Scanner keyboard = new Scanner(System.in);
         JSONArray readingList = new JSONArray();
 
         if (response.equals("y"))
@@ -133,7 +110,7 @@ public class Books
             int bookChoice = keyboard.nextInt();
             if ((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4))
             {
-                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
                 System.out.println("This is added to your reading list: " + readingList);
             }
 
@@ -145,7 +122,7 @@ public class Books
                     bookChoice = keyboard.nextInt();
                 }
 
-                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number chosen
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
                 System.out.println("This is added to your reading list: " + readingList);
             }
         }
