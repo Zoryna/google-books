@@ -12,24 +12,17 @@ import org.json.simple.parser.ParseException;
 public class Books //TODO create tests
 {
     //query is added to url
-    public String addQuery(String query)
+    public String addQuery(String query) throws UnsupportedEncodingException
     {
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
+        link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
-        try
-        {
-            link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
-            System.out.println("Searching..."); //for users to be aware of the status of their search
-        }
-        catch (UnsupportedEncodingException unsopEncodExc)
-        {
-            unsopEncodExc.printStackTrace();
-        }
+        System.out.println("Searching..."); //for users to be aware of the status of their search
 
         return link;
     }
 
-    public boolean checkIfValidQuery(URL url) throws IOException //TODO check if valid query
+    public boolean checkIfValidQuery(URL url) throws IOException //TODO consider edge case when there is no internet, and * input
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
@@ -47,18 +40,12 @@ public class Books //TODO create tests
         }
     }
 
-    public void makeURLConnection (URL url)
+    public void makeURLConnection (URL url) throws IOException
     {
-        try
-        {
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            System.out.println("Connecting..."); //for users to be aware of the status of their search
-        }
-        catch (IOException ioException)
-        {
-            ioException.printStackTrace();
-        }
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
 
     public JSONArray parseData(URL url) throws IOException, ParseException
