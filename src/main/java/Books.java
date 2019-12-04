@@ -11,40 +11,58 @@ import org.json.simple.parser.ParseException;
 
 public class Books //TODO create tests
 {
-    URL url;
-
     //query is added to url
-    public String addQuery(String query) throws UnsupportedEncodingException //TODO check if valid query
+    public String addQuery(String query)
     {
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
-        link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
-        System.out.println("Searching..."); //for users to be aware of the status of their search
+        try
+        {
+            link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
+            System.out.println("Searching..."); //for users to be aware of the status of their search
+        }
+        catch (UnsupportedEncodingException unsopEncodExc)
+        {
+            unsopEncodExc.printStackTrace();
+        }
 
         return link;
     }
 
-    public void makeURLConnection (URL url) //throws IOException
+    public boolean checkIfValidQuery(URL url) throws IOException //TODO check if valid query
+    {
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        int responseCode = con.getResponseCode();
+
+        System.out.println("Checking if query is valid..."); //for users to be aware of the status of their search
+        if (HttpURLConnection.HTTP_BAD_REQUEST == responseCode)
+        {
+            System.out.println("Query is INVALID");
+            return false;
+        }
+        else
+        {
+            System.out.println("Query is VALID");
+            return true;
+        }
+    }
+
+    public void makeURLConnection (URL url)
     {
         try
         {
-            this.url = url;
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
+            System.out.println("Connecting..."); //for users to be aware of the status of their search
         }
         catch (IOException ioException)
         {
-            System.out.println("Invalid query was entered");
+            ioException.printStackTrace();
         }
-
-
-        System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
-
 
     public JSONArray parseData(URL url) throws IOException, ParseException
     {
-        this.url = url;
         Scanner readData;
         String inline = ""; //gets the JSON data and makes it a String
 
