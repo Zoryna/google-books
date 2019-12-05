@@ -55,7 +55,8 @@ public class Books //TODO create tests
         String inline = ""; //gets the JSON data and makes it a String
 
         readData = new Scanner(url.openStream()); //reads JSON data
-        while (readData.hasNext()) {
+        while (readData.hasNext())
+        {
             inline += readData.nextLine();
         }
         readData.close();
@@ -71,6 +72,7 @@ public class Books //TODO create tests
     {
         System.out.println("Here are 5 books matching your search:");
         System.out.println("");
+        System.out.println("----------------------------------------------");
 
         for (int i = 0; i < dataFromAPI.size(); i++)
         {
@@ -100,7 +102,13 @@ public class Books //TODO create tests
     }
 
     //adding books to the reading list and displays what was added
-    public JSONArray putInReadingList(JSONArray titlesList) //TODO handle edge cases
+    /*TODO
+    make bookChoice a String and if it equals 0, 1, 2, 3, or 4 then convert from String to int
+    so it corresponds with the array index
+    if not then don't convert and let it be put in try
+    so it doesn't accidentally convert a letter to an int and try and find the index of that
+     */
+    public JSONArray putInReadingList(JSONArray titlesList)
     {
         Scanner keyboard = new Scanner(System.in);
         JSONArray readingList = new JSONArray();
