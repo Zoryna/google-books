@@ -3,6 +3,7 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,7 +23,7 @@ public class Books //TODO create tests
         return link;
     }
 
-    public boolean checkIfValidQuery(URL url) throws IOException //TODO consider edge case when there is no internet, and * input
+    public boolean checkIfValidQuery(URL url) throws IOException //TODO consider edge case when * input
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
@@ -99,7 +100,7 @@ public class Books //TODO create tests
     }
 
     //adding books to the reading list and displays what was added
-    public JSONArray putInReadingList(JSONArray titlesList)
+    public JSONArray putInReadingList(JSONArray titlesList) //TODO handle edge cases
     {
         Scanner keyboard = new Scanner(System.in);
         JSONArray readingList = new JSONArray();
@@ -109,23 +110,30 @@ public class Books //TODO create tests
         {
             System.out.println(i + ". " + titlesList.get(i));
         }
-        int bookChoice = keyboard.nextInt();
-        if ((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4))
-        {
-            readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
-        }
 
-        else
+        try //handles cases when user input is not an integer
         {
-            while (!((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4)))
+            int bookChoice = keyboard.nextInt();
+            if ((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4))
             {
-                System.out.println("Please type 0, 1, 2, 3, or 4");
-                bookChoice = keyboard.nextInt();
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
+                System.out.println("This is added to your reading list: " + readingList);
             }
+            else
+            {
+                while (!(bookChoice == 0) && !(bookChoice == 1) && !(bookChoice == 2) && !(bookChoice == 3) && !(bookChoice == 4)) //when an invalid integer is entered
+                {
+                    System.out.println("Please type 0, 1, 2, 3, or 4");
+                    bookChoice = keyboard.nextInt();
+                }
 
-            readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
+                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
+                System.out.println("This is added to your reading list: " + readingList);
+            }
+        }
+        catch (InputMismatchException inputMismExc) //for non-integer inputs
+        {
+            System.out.println("Invalid input was entered. Please try again.");
         }
 
         return readingList;
