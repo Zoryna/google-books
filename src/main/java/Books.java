@@ -3,7 +3,6 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.io.IOException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -101,13 +100,7 @@ public class Books //TODO create tests
         return titlesList;
     }
 
-    //adding books to the reading list and displays what was added
-    /*TODO
-    make bookChoice a String and if it equals 0, 1, 2, 3, or 4 then convert from String to int
-    so it corresponds with the array index
-    if not then don't convert and let it be put in try
-    so it doesn't accidentally convert a letter to an int and try and find the index of that
-     */
+    //adding books to the reading list and displays what was added TODO
     public JSONArray putInReadingList(JSONArray titlesList)
     {
         Scanner keyboard = new Scanner(System.in);
@@ -119,29 +112,32 @@ public class Books //TODO create tests
             System.out.println(i + ". " + titlesList.get(i));
         }
 
-        try //handles cases when user input is not an integer
+        String bookChoice = keyboard.nextLine(); //a String to handle non-integer inputs
+        int convertedToInt; //convert so it can later be added by index
+        try
         {
-            int bookChoice = keyboard.nextInt();
-            if ((bookChoice == 0) || (bookChoice == 1) || (bookChoice == 2) || (bookChoice == 3) || (bookChoice == 4))
+            if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
             {
-                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
+                convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
+                readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
                 System.out.println("This is added to your reading list: " + readingList);
             }
             else
             {
-                while (!(bookChoice == 0) && !(bookChoice == 1) && !(bookChoice == 2) && !(bookChoice == 3) && !(bookChoice == 4)) //when an invalid integer is entered
+                while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
                 {
                     System.out.println("Please type 0, 1, 2, 3, or 4");
-                    bookChoice = keyboard.nextInt();
+                    bookChoice = keyboard.nextLine();
                 }
-
-                readingList.add(titlesList.get(bookChoice)); //takes title from titlesList based on number/index chosen
+                //exits loop when valid number input, which can then be converted to correspond with the index
+                convertedToInt = Integer.parseInt(bookChoice);
+                readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
                 System.out.println("This is added to your reading list: " + readingList);
             }
         }
-        catch (InputMismatchException inputMismExc) //for non-integer inputs
+        catch (NumberFormatException numFormExc)
         {
-            System.out.println("Invalid input was entered. Please try again.");
+            System.out.println("Invalid input. Please try again.");
         }
 
         return readingList;
