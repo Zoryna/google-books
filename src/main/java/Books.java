@@ -171,7 +171,7 @@ public class Books //TODO create tests
     {
         if (readingList.isEmpty() == true)
         {
-            System.out.println("Your reading list is empty! Search for books so you can add to your list.");
+            System.out.println("Your reading list is currently empty!");
         }
         else
         {

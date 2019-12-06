@@ -16,9 +16,9 @@ public class BooksDriver
     JSONArray readingList = new JSONArray();
     Books aBook = new Books();
 
-    try
+    try //if there is internet connection
     {
-      do
+      do //allows to continue searching if users want to
       {
         System.out.println("Type in a book title that you want to search:");
         query = keyboard.nextLine().toLowerCase();
@@ -33,7 +33,7 @@ public class BooksDriver
           aBook.displaySearchResults(storedAPIData);
           JSONArray justTheBookTitles = aBook.returnOnlyTitles(storedAPIData);
 
-          do //to allow users to enter a valid input
+          do //allow chance to enter valid input for adding to reading list
           {
             System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
             response = keyboard.nextLine().toLowerCase().trim();
@@ -44,22 +44,21 @@ public class BooksDriver
              System.out.println("Happy browsing!");
             else
               System.out.println("Invalid input. Please try again.");
-           }
-           while (!(response.equals("y")) && !(response.equals("n")));
+          }
+          while (!(response.equals("y")) && !(response.equals("n")));
         }
         else
           System.out.println("Please try a different search.");
 
-        System.out.println("Do you want to search for another book? Type 'Y' or 'N'"); //allows to keep searching or enter a valid query
-        keepSearching = keyboard.nextLine().toLowerCase().trim();
-        /*
-        TODO handle edge case
-        if (!(keepSearching("y")) && !(keepSearching("n")))
+        do //allow to enter a valid input for continuing to search
         {
-           System.out.println("Please enter 'y' or 'n'");
-           ...
+          System.out.println("Do you want to search for another book? Type 'Y' or 'N'");
+          keepSearching = keyboard.nextLine().toLowerCase().trim();
         }
-        */
+        while (!(keepSearching.equals("y")) && !(keepSearching.equals("n")));
+
+        if (keepSearching.equals("n"))
+          System.out.println("See you next time!");
       }
       while (keepSearching.equals("y"));
 
