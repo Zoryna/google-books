@@ -17,12 +17,12 @@ public class Books //TODO create tests
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
         link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
-        System.out.println("Searching..."); //for users to be aware of the status of their search
+        System.out.println("Processing..."); //for users to be aware of the status of their search
 
         return link;
     }
 
-    public boolean checkIfValidQuery(URL url) throws IOException //TODO consider edge case when * input
+    public boolean checkIfValidQuery(URL url) throws IOException
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
@@ -38,6 +38,37 @@ public class Books //TODO create tests
             System.out.println("Query is VALID");
             return true;
         }
+    }
+
+    public boolean checkIfResultsAvailable (URL url) throws IOException, ParseException
+    {
+        System.out.println("Checking for results..."); //for users to be aware of the status of their search
+
+        Scanner readData;
+        String inline = ""; //gets the JSON data and makes it a String
+
+        readData = new Scanner(url.openStream()); //reads JSON data
+        while (readData.hasNext())
+        {
+            inline += readData.nextLine();
+        }
+        readData.close();
+
+        JSONParser parse = new JSONParser();
+        JSONObject jObj = (JSONObject) parse.parse(inline); //parse the information from the API
+
+        if (jObj.get("totalItems").toString().equals("0")) //no search results
+        {
+            System.out.println("There were no results for your search.");
+            return false;
+        }
+
+        else
+        {
+            System.out.println("Results FOUND");
+            return true;
+        }
+
     }
 
     public void makeURLConnection (URL url) throws IOException
@@ -100,13 +131,13 @@ public class Books //TODO create tests
         return titlesList;
     }
 
-    //adding books to the reading list and displays what was added TODO
+    //adding books to the reading list and displays what was added
     public JSONArray putInReadingList(JSONArray titlesList)
     {
         Scanner keyboard = new Scanner(System.in);
         JSONArray readingList = new JSONArray();
 
-        System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list");
+        System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
         for (int i = 0; i < titlesList.size(); i++)
         {
             System.out.println(i + ". " + titlesList.get(i));
@@ -114,30 +145,23 @@ public class Books //TODO create tests
 
         String bookChoice = keyboard.nextLine(); //a String to handle non-integer inputs
         int convertedToInt; //convert so it can later be added by index
-        try
+        if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
         {
-            if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
-            {
-                convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
-                readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-                System.out.println("This is added to your reading list: " + readingList);
-            }
-            else
-            {
-                while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
-                {
-                    System.out.println("Please type 0, 1, 2, 3, or 4");
-                    bookChoice = keyboard.nextLine();
-                }
-                //exits loop when valid number input, which can then be converted to correspond with the index
-                convertedToInt = Integer.parseInt(bookChoice);
-                readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-                System.out.println("This is added to your reading list: " + readingList);
-            }
+            convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
+            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
+            System.out.println("This is added to your reading list: " + readingList);
         }
-        catch (NumberFormatException numFormExc)
+        else
         {
-            System.out.println("Invalid input. Please try again.");
+            while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
+            {
+                System.out.println("Please type 0, 1, 2, 3, or 4");
+                bookChoice = keyboard.nextLine();
+            }
+            //exits loop when valid number input, which can then be converted to correspond with the index
+            convertedToInt = Integer.parseInt(bookChoice);
+            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
+            System.out.println("This is added to your reading list: " + readingList);
         }
 
         return readingList;
@@ -145,10 +169,17 @@ public class Books //TODO create tests
 
     public void displayReadingList(JSONArray readingList)
     {
-        System.out.println("Here is your reading list:");
-        for (int i = 0; i < readingList.size(); i++)
+        if (readingList.isEmpty() == true)
         {
-           System.out.println(readingList.get(i));
+            System.out.println("Your reading list is empty! Search for books so you can add to your list.");
+        }
+        else
+        {
+            System.out.println("Here is your reading list:");
+            for (int i = 0; i < readingList.size(); i++)
+            {
+                System.out.println(readingList.get(i));
+            }
         }
     }
 }

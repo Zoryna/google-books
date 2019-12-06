@@ -16,15 +16,15 @@ public class BooksDriver
     JSONArray readingList = new JSONArray();
     Books aBook = new Books();
 
-    try //to handle cases when user has no internet
+    try
     {
-      do //to allow the user to do more searches
+      do
       {
         System.out.println("Type in a book title that you want to search:");
         query = keyboard.nextLine().toLowerCase();
         url = new URL(aBook.addQuery(query));
 
-        if (aBook.checkIfValidQuery(url) == true)
+        if (aBook.checkIfValidQuery(url) == true && aBook.checkIfResultsAvailable(url) == true)
         {
           aBook.makeURLConnection(url);
 
@@ -47,9 +47,19 @@ public class BooksDriver
            }
            while (!(response.equals("y")) && !(response.equals("n")));
         }
+        else
+          System.out.println("Please try a different search.");
 
         System.out.println("Do you want to search for another book? Type 'Y' or 'N'"); //allows to keep searching or enter a valid query
-        keepSearching = keyboard.nextLine().toLowerCase().trim(); //TODO handle edge case
+        keepSearching = keyboard.nextLine().toLowerCase().trim();
+        /*
+        TODO handle edge case
+        if (!(keepSearching("y")) && !(keepSearching("n")))
+        {
+           System.out.println("Please enter 'y' or 'n'");
+           ...
+        }
+        */
       }
       while (keepSearching.equals("y"));
 
