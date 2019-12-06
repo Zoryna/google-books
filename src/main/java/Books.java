@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class Books //TODO create tests
+public class Books //TODO create tests with main
 {
     //query is added to url
     public String addQuery(String query) throws UnsupportedEncodingException
@@ -22,24 +22,25 @@ public class Books //TODO create tests
         return link;
     }
 
-    public boolean checkIfValidQuery(URL url) throws IOException
+    public boolean checkIfValidURL(URL url) throws IOException
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
 
-        System.out.println("Checking if query is valid..."); //for users to be aware of the status of their search
+        System.out.println("Checking if query was valid..."); //for users to be aware of the status of their search
         if (HttpURLConnection.HTTP_BAD_REQUEST == responseCode)
         {
-            System.out.println("Query is INVALID");
+            System.out.println("Query was INVALID");
             return false;
         }
         else
         {
-            System.out.println("Query is VALID");
+            System.out.println("Query was VALID");
             return true;
         }
     }
 
+    //if the query was valid, it checks if there are results
     public boolean checkIfResultsAvailable (URL url) throws IOException, ParseException
     {
         System.out.println("Checking for results..."); //for users to be aware of the status of their search

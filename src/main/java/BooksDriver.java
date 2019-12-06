@@ -24,7 +24,7 @@ public class BooksDriver
         query = keyboard.nextLine().toLowerCase();
         url = new URL(aBook.addQuery(query));
 
-        if (aBook.checkIfValidQuery(url) == true && aBook.checkIfResultsAvailable(url) == true)
+        if (aBook.checkIfValidURL(url) == true && aBook.checkIfResultsAvailable(url) == true) //URL must be valid and then have available results
         {
           aBook.makeURLConnection(url);
 
