@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class Books //TODO create tests with main
+public class Books
 {
     //query is added to url
     public String addQuery(String query) throws UnsupportedEncodingException
@@ -22,6 +22,7 @@ public class Books //TODO create tests with main
         return link;
     }
 
+    //to check if the added query to the link makes it a valid URL
     public boolean checkIfValidURL(URL url) throws IOException
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
