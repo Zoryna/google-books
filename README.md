@@ -8,7 +8,7 @@ and receive the information they want.
 This program implements the Google Books API so users can access its database. Users can type in
 a query and the API will return and display 5 results, which includes the book's author, title, and publishing company,
 relating to the user's search. Among the displayed books, users can choose which of them to save in
-a local "Reading List" that they can view later.
+a local "Reading List" that they can view once they decided to stop searching for more books.
 
 ## Tech
 
