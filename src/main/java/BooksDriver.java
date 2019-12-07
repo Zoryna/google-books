@@ -7,7 +7,7 @@ import org.json.simple.parser.ParseException;
 
 public class BooksDriver
 {
-  public static void main(String args[]) throws IOException, ParseException
+  public static void main(String[] args) throws IOException, ParseException
   {
     Scanner keyboard = new Scanner(System.in);
     String keepSearching;

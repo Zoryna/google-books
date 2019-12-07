@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
-public class BooksTest //TODO update README
+public class BooksTest
 {
     Books testBook = new Books();
 
@@ -90,9 +90,25 @@ public class BooksTest //TODO update README
         JSONObject jObj = (JSONObject) parse.parse(inline);
 
         //for the method parameter to test
-        JSONArray storedAPIData = (JSONArray) jObj.get("items");
+        JSONArray dataFromAPI = (JSONArray) jObj.get("items");
 
-        testBook.displaySearchResults(storedAPIData);
+        System.out.println("Here are 5 books matching your search:");
+        System.out.println("");
+        System.out.println("----------------------------------------------");
+
+        for (int i = 0; i < dataFromAPI.size(); i++)
+        {
+            JSONObject specificJObj = (JSONObject)dataFromAPI.get(i);
+            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
+            JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors has its own array inside volumeInfo
+
+            System.out.println("Title: " + volInfo.get("title"));
+            System.out.println("Author: " + authorArr);
+            System.out.println("Publisher: " + volInfo.get("publisher"));
+            System.out.println("----------------------------------------------");
+        }
+
+        testBook.displaySearchResults(dataFromAPI);
     }
 
     @Test
@@ -129,48 +145,9 @@ public class BooksTest //TODO update README
     }
 
     /*@Test
-    public void putInReadingList() throws Exception //TODO create test with main
+    public void putInReadingList() throws Exception //method returns a JSONArray containing the book that was added
     {
-        Scanner keyboard = new Scanner(System.in);
-        JSONArray readingList = new JSONArray();
-        JSONArray titlesList = new JSONArray();
-
-        titlesList.add("Harry Potter");
-        titlesList.add("The Hunger Games");
-        titlesList.add("The Lightning Thief");
-        titlesList.add("Bluets");
-        titlesList.add("The Shadow of the Wind");
-        titlesList.add("Romeo and Juliet");
-
-
-        System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
-        for (int i = 0; i < titlesList.size(); i++)
-        {
-            System.out.println(i + ". " + titlesList.get(i));
-        }
-
-        String bookChoice = keyboard.nextLine(); //a String to handle non-integer inputs
-        int convertedToInt; //convert so it can later be added by index
-        if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
-        {
-            convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
-            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
-        }
-        else
-        {
-            while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
-            {
-                System.out.println("Please type 0, 1, 2, 3, or 4");
-                bookChoice = keyboard.nextLine();
-            }
-            //exits loop when valid number input, which can then be converted to correspond with the index
-            convertedToInt = Integer.parseInt(bookChoice);
-            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
-        }
-
-        assertEquals(testBook.putInReadingList(titlesList), );
+        //select PutInReadingListTest.java to run the test for this method
     } */
 
     @Test
