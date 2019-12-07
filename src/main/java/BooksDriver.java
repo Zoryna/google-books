@@ -26,7 +26,7 @@ public class BooksDriver
 
         if (aBook.checkIfValidURL(url) == true && aBook.checkIfResultsAvailable(url) == true) //URL must be valid and then have available results
         {
-          aBook.makeURLConnection(url);
+          aBook.makeHTTPURLConnection(url);
 
           //made returned JSONArray methods its own array so it's easier to read and put into parameters
           JSONArray storedAPIData = aBook.parseData(url);

@@ -41,36 +41,20 @@ public class BooksTest
     }
 
     @Test
-    public void makeURLConnection() throws Exception //void method, it makes an HttpURLConnection
+    public void makeHTTPURLConnection() throws Exception //void method, it makes an HttpURLConnection
     {
         URL url = new URL("https://www.googleapis.com/books/v1/volumes?q="); //enter any link
-        testBook.makeURLConnection(url);
+        testBook.makeHTTPURLConnection(url);
     }
 
     @Test
     public void parseData() throws Exception //the method takes data from the API and places it in a JSON object/array
     {
-        Scanner readData;
-        String inline = ""; //gets the JSON data and makes it a String
-
         //enter a search after the 'q' and use '+' to act as spaces for your search
         //query (q) should be after the "q=" and before the "&"
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=harry+potter&startIndex=0&maxResults=5");
+        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=the+hunger+games&startIndex=0&maxResults=5");
 
-        readData = new Scanner(url.openStream()); //reads JSON data
-        while (readData.hasNext())
-        {
-            inline += readData.nextLine();
-        }
-        readData.close();
-
-        JSONParser parse = new JSONParser();
-        JSONObject jObj = (JSONObject) parse.parse(inline); //parse the information from the API
-
-        //for the method parameter to test
-        JSONArray storedAPIData = (JSONArray) jObj.get("items"); //array stores data from "items" array
-
-        testBook.parseData(url); //did not use assertEquals because API acn return different results for the same query
+        testBook.parseData(url); //did not use assertEquals because API can return different results for the same query
     }
 
     @Test
@@ -78,7 +62,7 @@ public class BooksTest
     {
         Scanner readData;
         String inline = "";
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=hunger+games" +
+        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=harry+potter" +
                 "&startIndex=0&maxResults=5"); //enter a search after the 'q' and use '+' to act as spaces for your search
 
         readData = new Scanner(url.openStream());
@@ -153,11 +137,11 @@ public class BooksTest
     } */
 
     @Test
-    public void displayReadingList() throws Exception //void method that shows what was added to the reading list
+    public void displayReadingList() throws Exception //void method that shows what has been added to the reading list
     {
         JSONArray testList = new JSONArray();
-        testList.add("Harry Potter");
         testList.add("The Hunger Games");
+        testList.add("Harry Potter");
         testList.add("The Lightning Thief");
         testList.add("Bluets");
         testList.add("The Shadow of the Wind");
@@ -165,5 +149,4 @@ public class BooksTest
 
         testBook.displayReadingList(testList);
     }
-
 }

@@ -37,7 +37,7 @@ Other instructions on setting up the dependency:
 https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple/1.1.1
 
 To run the program, use an IDE and select the BooksDriver.java file and press the green arrow icon
-to run the file.
+near the class name or main() and select "Run."
 
 To run the tests, select BooksTest.java and locate the green arrow near the class name and select "Run"
 to run all the tests at once. If you want to run the tests individually, locate the green arrow near the

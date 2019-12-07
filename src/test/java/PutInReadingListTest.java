@@ -13,12 +13,11 @@ public class PutInReadingListTest //method returns a JSONArray containing the bo
         JSONArray titlesList = new JSONArray();
         Books testBook = new Books();
 
-        titlesList.add("Harry Potter");
         titlesList.add("The Hunger Games");
+        titlesList.add("Harry Potter");
         titlesList.add("The Lightning Thief");
         titlesList.add("Bluets");
         titlesList.add("The Shadow of the Wind");
-        titlesList.add("Romeo and Juliet");
 
         testBook.putInReadingList(titlesList);
     }

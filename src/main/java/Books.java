@@ -64,16 +64,14 @@ public class Books
             System.out.println("There were no results for your search.");
             return false;
         }
-
         else
         {
             System.out.println("Results FOUND");
             return true;
         }
-
     }
 
-    public void makeURLConnection (URL url) throws IOException
+    public void makeHTTPURLConnection (URL url) throws IOException
     {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -81,6 +79,7 @@ public class Books
         System.out.println("Connecting..."); //for users to be aware of the status of their search
     }
 
+    //to read data from the API
     public JSONArray parseData(URL url) throws IOException, ParseException
     {
         Scanner readData;
