@@ -1,69 +1,53 @@
+import junit.framework.TestCase;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.Test;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
 
-import static org.junit.Assert.*;
+public class BooksTest extends TestCase {
 
-public class BooksTest
-{
+    URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=harry+potter&startIndex=0&maxResults=5"); //test url
+
     Books testBook = new Books();
+    JSONArray testArray = testBook.parseData(url);
 
-    @Test
-    public void addQuery() throws Exception //the method returns the link with the query
-    {
-        String query = " "; //type in a query between the ""
-        String link = "https://www.googleapis.com/books/v1/volumes?q="
-                + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
+    JSONArray testTitlesList = new JSONArray();
 
-        assertEquals(testBook.addQuery(query), link);
+    public BooksTest() throws IOException, ParseException {
     }
 
-    @Test
-    public void checkIfValidURL() throws Exception //the method checks if the link is a valid URL
+    public void testAddQuery() throws UnsupportedEncodingException
     {
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q="); //place any link as the parameter
+        String query = "harry potter"; //test input
 
-        assertEquals(testBook.checkIfValidURL(url), false); //test true or false
+        String link = "https://www.googleapis.com/books/v1/volumes?q=";
+        link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
+
+        String testLink = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
+
+        assertEquals(link, testLink);
     }
 
-    @Test
-    public void checkIfResultsAvailable() throws Exception //the method checks if the API has data for that query
+    public void testCheckIfValidURL() throws IOException
     {
-        //enter a search after the 'q' and use '+' to act as spaces for your search
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=*");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        int responseCode = con.getResponseCode();
 
-        assertEquals(testBook.checkIfResultsAvailable(url), false); //test true or false
+        //if equal to each other then invalid query
+        assertNotSame(responseCode, HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
-    @Test
-    public void makeHTTPURLConnection() throws Exception //void method, it makes an HttpURLConnection
-    {
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q="); //enter any link
-        testBook.makeHTTPURLConnection(url);
-    }
-
-    @Test
-    public void parseData() throws Exception //the method takes data from the API and places it in a JSON object/array
-    {
-        //enter a search after the 'q' and use '+' to act as spaces for your search
-        //query (q) should be after the "q=" and before the "&"
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=the+hunger+games&startIndex=0&maxResults=5");
-
-        testBook.parseData(url); //did not use assertEquals because API can return different results for the same query
-    }
-
-    @Test
-    public void displaySearchResults() throws Exception //void method that shows the books' title, author, publishing company
+    public void testCheckIfResultsAvailable() throws IOException, ParseException
     {
         Scanner readData;
         String inline = "";
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=harry+potter" +
-                "&startIndex=0&maxResults=5"); //enter a search after the 'q' and use '+' to act as spaces for your search
 
         readData = new Scanner(url.openStream());
         while (readData.hasNext())
@@ -75,37 +59,22 @@ public class BooksTest
         JSONParser parse = new JSONParser();
         JSONObject jObj = (JSONObject) parse.parse(inline);
 
-        //for the method parameter to test
-        JSONArray dataFromAPI = (JSONArray) jObj.get("items");
-
-        System.out.println("Here are 5 books matching your search:");
-        System.out.println("");
-        System.out.println("----------------------------------------------");
-
-        for (int i = 0; i < dataFromAPI.size(); i++)
-        {
-            JSONObject specificJObj = (JSONObject)dataFromAPI.get(i);
-            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo"); //volumeInfo inside "items" and contains title, author, and publisher
-            JSONArray authorArr = (JSONArray)volInfo.get("authors"); //authors has its own array inside volumeInfo
-
-            System.out.println("Title: " + volInfo.get("title"));
-            System.out.println("Author: " + authorArr);
-            System.out.println("Publisher: " + volInfo.get("publisher"));
-            System.out.println("----------------------------------------------");
-        }
-
-        testBook.displaySearchResults(dataFromAPI);
+        //if equal then no results
+        assertNotSame(jObj.get("totalItems").toString(), "0");
     }
 
-    @Test
-    public void returnOnlyTitles() throws Exception //method only returns the 5 titles found for the query
+    public void testMakeHTTPURLConnection() throws IOException
     {
-        JSONArray titlesList = new JSONArray();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
 
+        assertEquals(con.getRequestMethod(), "GET");
+    }
+
+    public void testParseData() throws IOException, ParseException
+    {
         Scanner readData;
         String inline = "";
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=the+lightning+thief" +
-                "&startIndex=0&maxResults=5"); //enter a search after the 'q' and use '+' to act as spaces for your search
 
         readData = new Scanner(url.openStream());
         while (readData.hasNext())
@@ -116,37 +85,55 @@ public class BooksTest
 
         JSONParser parse = new JSONParser();
         JSONObject jObj = (JSONObject) parse.parse(inline);
+        JSONArray storedAPIData = (JSONArray) jObj.get("items");
 
-        //for the method parameter to test
-        JSONArray dataFromAPI = (JSONArray) jObj.get("items");
+        assertEquals(storedAPIData, (JSONArray) jObj.get("items"));
+    }
 
-        for (int i = 0; i < dataFromAPI.size(); i++)
+    public void testDisplaySearchResults()
+    {
+        for (int i = 0; i < testArray.size(); i++)
         {
-            JSONObject specificJObj = (JSONObject)dataFromAPI.get(i);
+            JSONObject specificJObj = (JSONObject)testArray.get(i);
             JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo");
-            titlesList.add(volInfo.get("title"));
-        }
+            JSONArray authorArr = (JSONArray)volInfo.get("authors");
 
-        assertEquals(testBook.returnOnlyTitles(dataFromAPI), titlesList);
+            assertEquals(volInfo, (JSONObject)specificJObj.get("volumeInfo"));
+            assertEquals(authorArr, volInfo.get("authors"));
+        }
     }
 
-    /*@Test
-    public void putInReadingList() throws Exception //method returns a JSONArray containing the book that was added
+    public void testReturnOnlyTitles()
     {
-        //select PutInReadingListTest.java to run the test for this method
-    } */
+        for (int i = 0; i < testArray.size(); i++)
+        {
+            JSONObject specificJObj = (JSONObject)testArray.get(i);
+            JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo");
+            testTitlesList.add(volInfo.get("title"));
 
-    @Test
-    public void displayReadingList() throws Exception //void method that shows what has been added to the reading list
+            assertEquals(testTitlesList.get(i), volInfo.get("title"));
+        }
+    }
+
+    public void testPutInReadingList()
     {
-        JSONArray testList = new JSONArray();
-        testList.add("The Hunger Games");
-        testList.add("Harry Potter");
-        testList.add("The Lightning Thief");
-        testList.add("Bluets");
-        testList.add("The Shadow of the Wind");
-        testList.add("Romeo and Juliet");
+        testTitlesList.add("A title");
 
-        testBook.displayReadingList(testList);
+        JSONArray testReadingList = new JSONArray();
+        testReadingList.add(testTitlesList.get(0));
+
+        assertEquals(testReadingList.get(0), testTitlesList.get(0));
+    }
+
+    public void testDisplayReadingList()
+    {
+        testArray.add("Input 1");
+        testArray.add("Input 2");
+        testArray.add("Input 3");
+
+        for (int i = 0; i < testArray.size(); i++)
+        {
+            assertEquals(testArray.get(i), testArray.get(i));
+        }
     }
 }
