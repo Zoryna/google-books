@@ -12,17 +12,15 @@ public class BooksDriver
     Scanner keyboard = new Scanner(System.in);
     String keepSearching;
     URL url;
-    String query, response;
-    JSONArray readingList = new JSONArray();
     Books aBook = new Books();
+    JSONArray justTheBookTitles = new JSONArray();
+    JSONArray readingList = new JSONArray();
 
     try //if there is internet connection
     {
       do //allows to continue searching if users want to
       {
-        System.out.println("Type in a book title that you want to search:");
-        query = keyboard.nextLine().toLowerCase();
-        url = new URL(aBook.addQuery(query));
+        url = new URL(aBook.addQuery());
 
         if (aBook.checkIfValidURL(url) == true && aBook.checkIfResultsAvailable(url) == true) //URL must be valid and then have available results
         {
@@ -31,21 +29,9 @@ public class BooksDriver
           //made returned JSONArray methods its own array so it's easier to read and put into parameters
           JSONArray storedAPIData = aBook.parseData(url);
           aBook.displaySearchResults(storedAPIData);
-          JSONArray justTheBookTitles = aBook.returnOnlyTitles(storedAPIData);
+          justTheBookTitles = aBook.returnOnlyTitles(storedAPIData);
 
-          do //allow chance to enter valid input for adding to reading list
-          {
-            System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
-            response = keyboard.nextLine().toLowerCase().trim();
-
-            if (response.equals("y"))
-             readingList.add(aBook.putInReadingList(justTheBookTitles)); //choose from selection of titles, then chosen title is added to readingList
-            else if (response.equals("n"))
-             System.out.println("Happy browsing!");
-            else
-              System.out.println("Invalid input. Please try again.");
-          }
-          while (!(response.equals("y")) && !(response.equals("n")));
+          readingList = aBook.putInReadingList(justTheBookTitles);
         }
         else
           System.out.println("Please try a different search.");

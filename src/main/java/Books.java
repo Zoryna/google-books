@@ -11,9 +11,14 @@ import org.json.simple.parser.ParseException;
 
 public class Books
 {
+    Scanner keyboard = new Scanner(System.in);
+
     //query is added to url
-    public String addQuery(String query) throws UnsupportedEncodingException
+    public String addQuery() throws UnsupportedEncodingException
     {
+        System.out.println("Type in a book title that you want to search:");
+        String query = keyboard.nextLine().toLowerCase();
+
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
         link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
@@ -137,32 +142,48 @@ public class Books
     {
         Scanner keyboard = new Scanner(System.in);
         JSONArray readingList = new JSONArray();
+        String response;
 
-        System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
-        for (int i = 0; i < titlesList.size(); i++)
-        {
-            System.out.println(i + ". " + titlesList.get(i));
-        }
+        System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
+        response = keyboard.nextLine().toLowerCase().trim();
 
-        String bookChoice = keyboard.nextLine(); //a String to handle non-integer inputs
-        int convertedToInt; //convert so it can later be added by index
-        if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
+         //allow chance to enter valid input for adding to reading list
+        while ((response.equals("y")) && !(response.equals("n")))
         {
-            convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
-            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
-        }
-        else
-        {
-            while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
+            if (response.equals("y"))
             {
-                System.out.println("Please type 0, 1, 2, 3, or 4");
-                bookChoice = keyboard.nextLine();
+                //TODO fix while loop in saving to reading list
+                System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
+                for (int i = 0; i < titlesList.size(); i++)
+                {
+                    System.out.println(i + ". " + titlesList.get(i));
+                }
+
+                String bookChoice = keyboard.nextLine(); //a String to handle non-integer inputs
+                int convertedToInt; //convert so it can later be added by index
+                if ((bookChoice.equals("0")) || (bookChoice.equals("1")) || (bookChoice.equals("2")) || (bookChoice.equals("3")) || (bookChoice.equals("4")))
+                {
+                    convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
+                    readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
+                    System.out.println("This is added to your reading list: " + readingList);
+                }
+                else
+                {
+                    while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
+                    {
+                        System.out.println("Please type 0, 1, 2, 3, or 4");
+                        bookChoice = keyboard.nextLine();
+                    }
+                    //exits loop when valid number input, which can then be converted to correspond with the index
+                    convertedToInt = Integer.parseInt(bookChoice);
+                    readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
+                    System.out.println("This is added to your reading list: " + readingList);
+                }
             }
-            //exits loop when valid number input, which can then be converted to correspond with the index
-            convertedToInt = Integer.parseInt(bookChoice);
-            readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-            System.out.println("This is added to your reading list: " + readingList);
+            else if (response.equals("n"))
+                System.out.println("Happy browsing!");
+            else
+                System.out.println("Invalid input. Please try again.");
         }
 
         return readingList;
