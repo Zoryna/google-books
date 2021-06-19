@@ -14,7 +14,6 @@ public class BooksDriver
     URL url;
     Books aBook = new Books();
     JSONArray justTheBookTitles = new JSONArray();
-    JSONArray readingList = new JSONArray();
 
     try //if there is internet connection
     {
@@ -30,8 +29,7 @@ public class BooksDriver
           JSONArray storedAPIData = aBook.parseData(url);
           aBook.displaySearchResults(storedAPIData);
           justTheBookTitles = aBook.returnOnlyTitles(storedAPIData);
-
-          readingList = aBook.putInReadingList(justTheBookTitles);
+          aBook.putInReadingList(justTheBookTitles);
         }
         else
           System.out.println("Please try a different search.");
@@ -48,7 +46,7 @@ public class BooksDriver
       }
       while (keepSearching.equals("y"));
 
-      aBook.displayReadingList(readingList);
+      aBook.displayReadingList();
     }
     catch (UnknownHostException unkHostExc)
     {

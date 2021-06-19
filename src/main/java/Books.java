@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 public class Books
 {
     Scanner keyboard = new Scanner(System.in);
+    JSONArray readingList = new JSONArray();
 
     //query is added to url
     public String addQuery() throws UnsupportedEncodingException
@@ -141,18 +142,15 @@ public class Books
     public JSONArray putInReadingList(JSONArray titlesList)
     {
         Scanner keyboard = new Scanner(System.in);
-        JSONArray readingList = new JSONArray();
         String response;
 
         System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
-        response = keyboard.nextLine().toLowerCase().trim();
-
-         //allow chance to enter valid input for adding to reading list
-        while ((response.equals("y")) && !(response.equals("n")))
+        do //allow chance to enter valid input for adding to reading list
         {
+            response = keyboard.nextLine().toLowerCase().trim();
+
             if (response.equals("y"))
             {
-                //TODO fix while loop in saving to reading list
                 System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
                 for (int i = 0; i < titlesList.size(); i++)
                 {
@@ -165,7 +163,7 @@ public class Books
                 {
                     convertedToInt = Integer.parseInt(bookChoice); //validated input that will be converted so it can correspond with the index
                     readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-                    System.out.println("This is added to your reading list: " + readingList);
+                    System.out.println("This is added to your reading list: " + readingList.get(readingList.size()-1)); //last item from list
                 }
                 else
                 {
@@ -177,19 +175,25 @@ public class Books
                     //exits loop when valid number input, which can then be converted to correspond with the index
                     convertedToInt = Integer.parseInt(bookChoice);
                     readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
-                    System.out.println("This is added to your reading list: " + readingList);
+                    System.out.println("This is added to your reading list: " + readingList.get(readingList.size()-1));
                 }
+
+                System.out.println("Do you want to add a different book from the list? Type 'Y' or 'N'");
+                //goes back to beginning of loop to get input
             }
             else if (response.equals("n"))
-                System.out.println("Happy browsing!");
-            else
+            {
+                System.out.println("Maybe we can find a different book for you!");
+            }
+            else if (!(response.equals("y")) && !(response.equals("n")))
                 System.out.println("Invalid input. Please try again.");
-        }
+
+        } while((response.equals("y")) && !(response.equals("n")));
 
         return readingList;
     }
 
-    public void displayReadingList(JSONArray readingList)
+    public void displayReadingList()
     {
         if (readingList.isEmpty() == true)
         {
