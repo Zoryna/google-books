@@ -145,11 +145,11 @@ public class Books
         String response;
 
         System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
-        do //allow chance to enter valid input for adding to reading list
-        {
-            response = keyboard.nextLine().toLowerCase().trim();
+        response = keyboard.nextLine().toLowerCase().trim();
 
-            if (response.equals("y"))
+        do //allow chance to enter valid boolean input for adding to reading list
+        {
+            if (response.equals("y")) //list shows for users to choose from
             {
                 System.out.println("Which book do you want to save to your reading list? Type 0, 1, 2, 3, or 4 to add the corresponding book to your reading list:");
                 for (int i = 0; i < titlesList.size(); i++)
@@ -165,7 +165,7 @@ public class Books
                     readingList.add(titlesList.get(convertedToInt)); //takes title from titlesList based on number/index chosen
                     System.out.println("This is added to your reading list: " + readingList.get(readingList.size()-1)); //last item from list
                 }
-                else
+                else //checks for valid book number input
                 {
                     while (!(bookChoice.equals("0")) && !(bookChoice.equals("1")) && !(bookChoice.equals("2")) && !(bookChoice.equals("3")) && !(bookChoice.equals("4")))
                     {
@@ -179,14 +179,24 @@ public class Books
                 }
 
                 System.out.println("Do you want to add a different book from the list? Type 'Y' or 'N'");
-                //goes back to beginning of loop to get input
+                response = keyboard.nextLine().toLowerCase().trim();
+                while (!(response.equals("y")) && !(response.equals("n"))) //checks for valid boolean input to view list to choose from
+                {
+                    System.out.println("Invalid input. Please try again.");
+                    System.out.println("Do you want to add a different book from the list? Type 'Y' or 'N'");
+                    response = keyboard.nextLine().toLowerCase().trim();
+                }
             }
-            else if (response.equals("n"))
+            else if (response.equals("n")) //don't want books from search
             {
                 System.out.println("Maybe we can find a different book for you!");
             }
-            else if (!(response.equals("y")) && !(response.equals("n")))
+            else if (!(response.equals("y")) && !(response.equals("n"))) //checks for valid boolean input for adding to reading list
+            {
                 System.out.println("Invalid input. Please try again.");
+                System.out.println("Do you want to save one of these books to your reading list? Type 'Y' or 'N'");
+                response = keyboard.nextLine().toLowerCase().trim();
+            }
 
         } while((response.equals("y")) && !(response.equals("n")));
 

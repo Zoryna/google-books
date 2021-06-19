@@ -29,12 +29,13 @@ public class BooksDriver
           JSONArray storedAPIData = aBook.parseData(url);
           aBook.displaySearchResults(storedAPIData);
           justTheBookTitles = aBook.returnOnlyTitles(storedAPIData);
-          aBook.putInReadingList(justTheBookTitles);
+
+          aBook.putInReadingList(justTheBookTitles); //go through search result and choose to put in reading list
         }
         else
           System.out.println("Please try a different search.");
 
-        do //allow to enter a valid input for continuing to search
+        do //allow to enter a valid input for continuing to search/want to search another book
         {
           System.out.println("Do you want to search for another book? Type 'Y' or 'N'");
           keepSearching = keyboard.nextLine().toLowerCase().trim();
