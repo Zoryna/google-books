@@ -15,11 +15,8 @@ public class Books
     JSONArray readingList = new JSONArray();
 
     //query is added to url
-    public String addQuery() throws UnsupportedEncodingException
+    public String addQuery(String query) throws UnsupportedEncodingException
     {
-        System.out.println("Type in a book title that you want to search:");
-        String query = keyboard.nextLine().toLowerCase();
-
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
         link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 

@@ -19,7 +19,9 @@ public class BooksDriver
     {
       do //allows to continue searching if users want to
       {
-        url = new URL(aBook.addQuery());
+        System.out.println("Type in a book title that you want to search:");
+        String query = keyboard.nextLine().toLowerCase();
+        url = new URL(aBook.addQuery(query));
 
         if (aBook.checkIfValidURL(url) == true && aBook.checkIfResultsAvailable(url) == true) //URL must be valid and then have available results
         {

@@ -30,9 +30,7 @@ public class BooksTest extends TestCase {
         String link = "https://www.googleapis.com/books/v1/volumes?q=";
         link = link + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
 
-        String testLink = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(query, "UTF-8") + "&startIndex=0&maxResults=5";
-
-        assertEquals(link, testLink);
+        assertEquals(testBook.addQuery(query), link);
     }
 
     public void testCheckIfValidURL() throws IOException
@@ -41,7 +39,7 @@ public class BooksTest extends TestCase {
         int responseCode = con.getResponseCode();
 
         //if equal to each other then invalid query
-        assertNotSame(responseCode, HttpURLConnection.HTTP_BAD_REQUEST);
+        assertNotSame(testBook.checkIfValidURL(url), HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
     public void testCheckIfResultsAvailable() throws IOException, ParseException
@@ -60,7 +58,7 @@ public class BooksTest extends TestCase {
         JSONObject jObj = (JSONObject) parse.parse(inline);
 
         //if equal then no results
-        assertNotSame(jObj.get("totalItems").toString(), "0");
+        assertNotSame(testBook.checkIfResultsAvailable(url), "0");
     }
 
     public void testMakeHTTPURLConnection() throws IOException
@@ -110,9 +108,9 @@ public class BooksTest extends TestCase {
             JSONObject specificJObj = (JSONObject)testArray.get(i);
             JSONObject volInfo = (JSONObject)specificJObj.get("volumeInfo");
             testTitlesList.add(volInfo.get("title"));
-
-            assertEquals(testTitlesList.get(i), volInfo.get("title"));
         }
+
+        assertEquals(testBook.returnOnlyTitles(testArray),testTitlesList);
     }
 
     public void testPutInReadingList()
